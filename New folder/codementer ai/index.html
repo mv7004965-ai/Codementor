@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMentor AI - Programming Education Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .code-font { font-family: 'JetBrains Mono', monospace; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .pulse-animation { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .typing-animation { 
+            border-right: 2px solid #3B82F6; 
+            animation: blink 1s infinite; 
+        }
+        @keyframes blink { 0%, 50% { border-color: transparent; } 51%, 100% { border-color: #3B82F6; } }
+        .code-editor {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .line-numbers {
+            background: #2d2d2d;
+            color: #666;
+            padding: 1rem 0.5rem;
+            text-align: right;
+            user-select: none;
+        }
+        .code-content {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .error-highlight { background-color: rgba(239, 68, 68, 0.2); }
+        .success-highlight { background-color: rgba(16, 185, 129, 0.2); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white p-6 card-shadow">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                    <span class="text-2xl">🧠</span>
+                </div>
+                <h1 class="text-2xl font-bold">CodeMentor AI</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm opacity-90">Progress:</span>
+                    <div class="w-20 h-2 bg-white bg-opacity-20 rounded-full">
+                        <div class="w-3/4 h-2 bg-white rounded-full"></div>
+                    </div>
+                    <span class="text-sm">75%</span>
+                </div>
+                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <span class="text-sm">👨‍💻</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto p-6 space-y-6">
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-xl p-2 card-shadow">
+            <div class="flex space-x-2">
+                <button onclick="switchTab('tutorial')" id="tutorialTab" class="flex-1 py-3 px-4 rounded-lg bg-blue-600 text-white font-medium transition-colors">
+                    📚 Interactive Tutorial
+                </button>
+                <button onclick="switchTab('practice')" id="practiceTab" class="flex-1 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-colors">
+                    💻 Code Practice
+                </button>
+                <button onclick="switchTab('analyzer')" id="analyzerTab" class="flex-1 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-colors">
+                    🔍 Code Analyzer
+                </button>
+                <button onclick="switchTab('exercises')" id="exercisesTab" class="flex-1 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-colors">
+                    🎯 Exercises
+                </button>
+            </div>
+        </div>
+
+        <!-- Tutorial Tab -->
+        <div id="tutorialContent" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Tutorial Content -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Python Basics: Variables & Data Types</h3>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="previousLesson()" class="p-2 text-gray-400 hover:text-gray-600">⬅️</button>
+                            <span class="text-sm text-gray-600">Lesson 3/12</span>
+                            <button onclick="nextLesson()" class="p-2 text-gray-400 hover:text-gray-600">➡️</button>
+                        </div>
+                    </div>
+                    
+                    <div id="tutorialText" class="prose max-w-none mb-6">
+                        <p class="text-gray-700 mb-4">In Python, variables are containers for storing data values. Unlike other programming languages, Python has no command for declaring a variable.</p>
+                        
+                        <h4 class="font-semibold text-gray-800 mb-2">Creating Variables:</h4>
+                        <ul class="list-disc list-inside text-gray-700 mb-4 space-y-1">
+                            <li>Variables are created when you assign a value to them</li>
+                            <li>Variable names are case-sensitive</li>
+                            <li>Must start with a letter or underscore</li>
+                        </ul>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                            <p class="text-blue-800 text-sm">💡 <strong>Pro Tip:</strong> Use descriptive variable names to make your code more readable!</p>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-3">
+                        <button onclick="startInteractiveDemo()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            ▶️ Start Interactive Demo
+                        </button>
+                        <button onclick="takeQuiz()" class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                            📝 Take Quiz
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Demo -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h4 class="font-semibold mb-4 flex items-center">
+                        <span class="mr-2">🎮</span> Try It Yourself
+                    </h4>
+                    
+                    <div class="code-editor mb-4">
+                        <div class="bg-gray-800 px-4 py-2 text-white text-sm flex items-center justify-between">
+                            <span>Python Interactive Shell</span>
+                            <button onclick="runTutorialCode()" class="bg-green-600 px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors">
+                                ▶️ Run
+                            </button>
+                        </div>
+                        <textarea id="tutorialCodeEditor" class="w-full h-40 code-font text-sm bg-gray-900 text-green-400 p-4 resize-none focus:outline-none" placeholder="# Try creating some variables here
+name = 'Alice'
+age = 25
+height = 5.6
+
+print(f'Name: {name}')
+print(f'Age: {age}')
+print(f'Height: {height}')"></textarea>
+                    </div>
+
+                    <div id="tutorialOutput" class="bg-gray-900 text-green-400 p-4 rounded-lg code-font text-sm min-h-20">
+                        <div class="text-gray-500">Output will appear here...</div>
+                    </div>
+
+                    <div id="tutorialHints" class="mt-4 space-y-2">
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3">
+                            <p class="text-yellow-800 text-sm">💡 <strong>Hint:</strong> Try changing the values and see what happens!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Practice Tab -->
+        <div id="practiceContent" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Code Editor -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Code Practice Arena</h3>
+                        <select id="languageSelect" class="border border-gray-300 rounded px-3 py-1 text-sm">
+                            <option value="python">Python</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C++</option>
+                        </select>
+                    </div>
+
+                    <div class="code-editor mb-4">
+                        <div class="bg-gray-800 px-4 py-2 text-white text-sm flex items-center justify-between">
+                            <span>main.py</span>
+                            <div class="flex space-x-2">
+                                <button onclick="formatCode()" class="bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors">
+                                    🎨 Format
+                                </button>
+                                <button onclick="runPracticeCode()" class="bg-green-600 px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors">
+                                    ▶️ Run
+                                </button>
+                            </div>
+                        </div>
+                        <textarea id="practiceCodeEditor" class="w-full h-64 code-font text-sm bg-gray-900 text-green-400 p-4 resize-none focus:outline-none" placeholder="# Write your Python code here
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Test your function
+print(fibonacci(10))"></textarea>
+                    </div>
+
+                    <div class="flex space-x-3 mb-4">
+                        <button onclick="analyzeCode()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                            🔍 Analyze Code
+                        </button>
+                        <button onclick="getHint()" class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                            💡 Get Hint
+                        </button>
+                        <button onclick="clearCode()" class="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
+                            🗑️ Clear
+                        </button>
+                    </div>
+
+                    <div id="practiceOutput" class="bg-gray-900 text-green-400 p-4 rounded-lg code-font text-sm min-h-20">
+                        <div class="text-gray-500">Output will appear here...</div>
+                    </div>
+                </div>
+
+                <!-- AI Assistant -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h4 class="font-semibold mb-4 flex items-center">
+                        <span class="mr-2">🤖</span> AI Code Assistant
+                    </h4>
+
+                    <div id="aiAnalysis" class="space-y-4 mb-6">
+                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                            <h5 class="font-medium text-green-800 mb-2">✅ Code Quality</h5>
+                            <p class="text-green-700 text-sm">Your code structure looks good! Functions are properly defined.</p>
+                        </div>
+
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                            <h5 class="font-medium text-yellow-800 mb-2">⚠️ Performance Suggestion</h5>
+                            <p class="text-yellow-700 text-sm">Consider using memoization to optimize the recursive fibonacci function for better performance.</p>
+                        </div>
+
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <h5 class="font-medium text-blue-800 mb-2">💡 Learning Opportunity</h5>
+                            <p class="text-blue-700 text-sm">Try implementing an iterative version of fibonacci to compare performance!</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t pt-4">
+                        <h5 class="font-medium mb-3">Ask the AI Assistant:</h5>
+                        <div class="flex space-x-2">
+                            <input type="text" id="aiQuestion" placeholder="Ask about your code..." class="flex-1 p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <button onclick="askAI()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Analyzer Tab -->
+        <div id="analyzerContent" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Code Input -->
+                <div class="lg:col-span-2 bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <span class="mr-2">🔍</span> Advanced Code Analyzer
+                    </h3>
+
+                    <div class="code-editor mb-4">
+                        <div class="bg-gray-800 px-4 py-2 text-white text-sm flex items-center justify-between">
+                            <span>Paste your code for analysis</span>
+                            <button onclick="analyzeFullCode()" class="bg-purple-600 px-3 py-1 rounded text-xs hover:bg-purple-700 transition-colors">
+                                🔍 Analyze
+                            </button>
+                        </div>
+                        <textarea id="analyzerCodeEditor" class="w-full h-80 code-font text-sm bg-gray-900 text-green-400 p-4 resize-none focus:outline-none" placeholder="# Paste your code here for comprehensive analysis
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+    return arr
+
+# Test the function
+numbers = [64, 34, 25, 12, 22, 11, 90]
+sorted_numbers = bubble_sort(numbers)
+print(sorted_numbers)"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <button onclick="checkSyntax()" class="bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            🚨 Check Syntax
+                        </button>
+                        <button onclick="findBugs()" class="bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-700 transition-colors">
+                            🐛 Find Bugs
+                        </button>
+                        <button onclick="optimizeCode()" class="bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            ⚡ Optimize
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Analysis Results -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h4 class="font-semibold mb-4 flex items-center">
+                        <span class="mr-2">📊</span> Analysis Results
+                    </h4>
+
+                    <div id="analysisResults" class="space-y-4">
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-800 mb-2">Code Metrics</h5>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                <span>Lines of Code:</span>
+                                    <span class="font-medium">12</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Complexity:</span>
+                                    <span class="font-medium text-yellow-600">Medium</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Functions:</span>
+                                    <span class="font-medium">1</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-800 mb-2">Quality Score</h5>
+                            <div class="flex items-center space-x-2">
+                                <div class="flex-1 bg-gray-200 rounded-full h-3">
+                                    <div class="bg-green-500 h-3 rounded-full" style="width: 75%"></div>
+                                </div>
+                                <span class="text-sm font-medium">75/100</span>
+                            </div>
+                        </div>
+
+                        <div class="border border-gray-200 rounded-lg p-4">
+                            <h5 class="font-medium text-gray-800 mb-2">Issues Found</h5>
+                            <div class="space-y-2">
+                                <div class="flex items-start space-x-2">
+                                    <span class="text-yellow-500 text-xs mt-1">⚠️</span>
+                                    <p class="text-xs text-gray-600">Time complexity O(n²) - consider more efficient sorting</p>
+                                </div>
+                                <div class="flex items-start space-x-2">
+                                    <span class="text-blue-500 text-xs mt-1">💡</span>
+                                    <p class="text-xs text-gray-600">Add docstring for better documentation</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h4 class="font-semibold mb-4 flex items-center">
+                    <span class="mr-2">📋</span> Detailed Analysis Report
+                </h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="space-y-4">
+                        <h5 class="font-medium text-red-600">🚨 Errors & Warnings</h5>
+                        <div class="space-y-2">
+                            <div class="bg-red-50 border-l-4 border-red-400 p-3">
+                                <p class="text-red-800 text-sm font-medium">No syntax errors found</p>
+                                <p class="text-red-600 text-xs">Code compiles successfully</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h5 class="font-medium text-yellow-600">⚡ Performance</h5>
+                        <div class="space-y-2">
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3">
+                                <p class="text-yellow-800 text-sm font-medium">Inefficient Algorithm</p>
+                                <p class="text-yellow-600 text-xs">Consider using merge sort or quick sort for better performance</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h5 class="font-medium text-green-600">✅ Best Practices</h5>
+                        <div class="space-y-2">
+                            <div class="bg-green-50 border-l-4 border-green-400 p-3">
+                                <p class="text-green-800 text-sm font-medium">Good Variable Names</p>
+                                <p class="text-green-600 text-xs">Variable names are descriptive and follow conventions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercises Tab -->
+        <div id="exercisesContent" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Exercise Categories -->
+                <div class="bg-white rounded-xl p-6 card-shadow">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <span class="mr-2">🎯</span> Exercise Categories
+                    </h3>
+
+                    <div class="space-y-3">
+                        <button onclick="loadExercises('beginner')" class="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">🌱 Beginner</h4>
+                                    <p class="text-sm text-gray-600">Basic syntax and concepts</p>
+                                </div>
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">12/15</span>
+                            </div>
+                        </button>
+
+                        <button onclick="loadExercises('intermediate')" class="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">🚀 Intermediate</h4>
+                                    <p class="text-sm text-gray-600">Data structures & algorithms</p>
+                                </div>
+                                <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">8/20</span>
+                            </div>
+                        </button>
+
+                        <button onclick="loadExercises('advanced')" class="w-full text-left p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">🔥 Advanced</h4>
+                                    <p class="text-sm text-gray-600">Complex problem solving</p>
+                                </div>
+                                <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">3/25</span>
+                            </div>
+                        </button>
+
+                        <button onclick="generateCustomExercise()" class="w-full text-left p-4 border-2 border-dashed border-blue-300 rounded-lg hover:bg-blue-50 transition-colors">
+                            <div class="text-center">
+                                <h4 class="font-medium text-blue-600">✨ Generate Custom</h4>
+                                <p class="text-sm text-blue-500">AI-powered exercise creation</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Current Exercise -->
+                <div class="lg:col-span-2 bg-white rounded-xl p-6 card-shadow">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Current Exercise</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600">Difficulty:</span>
+                            <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <div id="currentExercise" class="space-y-4">
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                            <h4 class="font-semibold text-blue-800 mb-2">Problem: Two Sum</h4>
+                            <p class="text-blue-700 text-sm mb-3">
+                                Given an array of integers and a target sum, return the indices of two numbers that add up to the target.
+                            </p>
+                            <div class="text-xs text-blue-600">
+                                <strong>Example:</strong> Input: [2, 7, 11, 15], target = 9 → Output: [0, 1]
+                            </div>
+                        </div>
+
+                        <div class="code-editor">
+                            <div class="bg-gray-800 px-4 py-2 text-white text-sm flex items-center justify-between">
+                                <span>solution.py</span>
+                                <div class="flex space-x-2">
+                                    <button onclick="testSolution()" class="bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors">
+                                        🧪 Test
+                                    </button>
+                                    <button onclick="submitSolution()" class="bg-green-600 px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors">
+                                        ✅ Submit
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea id="exerciseCodeEditor" class="w-full h-48 code-font text-sm bg-gray-900 text-green-400 p-4 resize-none focus:outline-none" placeholder="def two_sum(nums, target):
+    # Your solution here
+    pass
+
+# Test cases will be run automatically"></textarea>
+                        </div>
+
+                        <div id="exerciseResults" class="bg-gray-900 text-green-400 p-4 rounded-lg code-font text-sm min-h-16">
+                            <div class="text-gray-500">Test results will appear here...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise Statistics -->
+            <div class="bg-white rounded-xl p-6 card-shadow">
+                <h4 class="font-semibold mb-4 flex items-center">
+                    <span class="mr-2">📈</span> Your Progress
+                </h4>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                        <div class="text-2xl font-bold text-green-600">23</div>
+                        <div class="text-sm text-green-700">Completed</div>
+                    </div>
+                    <div class="text-center p-4 bg-blue-50 rounded-lg">
+                        <div class="text-2xl font-bold text-blue-600">5</div>
+                        <div class="text-sm text-blue-700">In Progress</div>
+                    </div>
+                    <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                        <div class="text-2xl font-bold text-yellow-600">87%</div>
+                        <div class="text-sm text-yellow-700">Success Rate</div>
+                    </div>
+                    <div class="text-center p-4 bg-purple-50 rounded-lg">
+                        <div class="text-2xl font-bold text-purple-600">42</div>
+                        <div class="text-sm text-purple-700">Streak Days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('[id$="Tab"]').forEach(tab => {
+                tab.className = tab.className.replace('bg-blue-600 text-white', 'text-gray-600 hover:bg-gray-100');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+            
+            // Add active class to selected tab
+            const activeTab = document.getElementById(tabName + 'Tab');
+            activeTab.className = activeTab.className.replace('text-gray-600 hover:bg-gray-100', 'bg-blue-600 text-white');
+        }
+
+        // Tutorial Functions
+        function startInteractiveDemo() {
+            const editor = document.getElementById('tutorialCodeEditor');
+            const output = document.getElementById('tutorialOutput');
+            
+            // Simulate typing animation
+            const code = `# Let's create some variables!
+name = "Alice"
+age = 25
+height = 5.6
+
+print(f"Name: {name}")
+print(f"Age: {age}")
+print(f"Height: {height}")`;
+            
+            editor.value = '';
+            let i = 0;
+            const typeWriter = () => {
+                if (i < code.length) {
+                    editor.value += code.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                } else {
+                    runTutorialCode();
+                }
+            };
+            typeWriter();
+        }
+
+        function runTutorialCode() {
+            const code = document.getElementById('tutorialCodeEditor').value;
+            const output = document.getElementById('tutorialOutput');
+            
+            // Simulate code execution
+            if (code.includes('print')) {
+                output.innerHTML = `
+                    <div class="text-green-400">Name: Alice</div>
+                    <div class="text-green-400">Age: 25</div>
+                    <div class="text-green-400">Height: 5.6</div>
+                    <div class="text-gray-500 mt-2">✅ Code executed successfully!</div>
+                `;
+            } else {
+                output.innerHTML = '<div class="text-gray-500">No output to display</div>';
+            }
+        }
+
+        function nextLesson() {
+            showNotification('Moving to next lesson: Functions & Parameters', 'info');
+        }
+
+        function previousLesson() {
+            showNotification('Going back to: Introduction to Python', 'info');
+        }
+
+        function takeQuiz() {
+            showNotification('Quiz started! Answer 5 questions about variables.', 'success');
+        }
+
+        // Practice Functions
+        function runPracticeCode() {
+            const code = document.getElementById('practiceCodeEditor').value;
+            const output = document.getElementById('practiceOutput');
+            
+            // Simulate fibonacci execution
+            if (code.includes('fibonacci')) {
+                output.innerHTML = `
+                    <div class="text-green-400">55</div>
+                    <div class="text-gray-500 mt-2">✅ Execution completed in 0.023s</div>
+                `;
+            } else {
+                output.innerHTML = '<div class="text-yellow-400">⚠️ No executable code found</div>';
+            }
+        }
+
+        function analyzeCode() {
+            const analysis = document.getElementById('aiAnalysis');
+            analysis.innerHTML = `
+                <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                    <h5 class="font-medium text-red-800 mb-2">🚨 Performance Issue</h5>
+                    <p class="text-red-700 text-sm">Recursive fibonacci has exponential time complexity O(2^n). Consider using dynamic programming.</p>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                    <h5 class="font-medium text-blue-800 mb-2">💡 Suggestion</h5>
+                    <p class="text-blue-700 text-sm">Add memoization or use iterative approach for better performance.</p>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                    <h5 class="font-medium text-green-800 mb-2">✅ Code Style</h5>
+                    <p class="text-green-700 text-sm">Function naming and structure follow Python conventions well!</p>
+                </div>
+            `;
+            showNotification('Code analysis completed!', 'success');
+        }
+
+        function getHint() {
+            showNotification('💡 Hint: Try using a dictionary to store previously calculated values (memoization)', 'info');
+        }
+
+        function formatCode() {
+            showNotification('Code formatted according to PEP 8 standards', 'success');
+        }
+
+        function clearCode() {
+            document.getElementById('practiceCodeEditor').value = '';
+            document.getElementById('practiceOutput').innerHTML = '<div class="text-gray-500">Output will appear here...</div>';
+        }
+
+        function askAI() {
+            const question = document.getElementById('aiQuestion').value;
+            if (!question) return;
+            
+            // Simulate AI response
+            const responses = [
+                "The recursive approach works but has exponential time complexity. Consider using dynamic programming for optimization.",
+                "Your function structure is correct! Try adding input validation for edge cases.",
+                "Great question! The time complexity can be improved from O(2^n) to O(n) using memoization.",
+                "This is a classic problem. You might want to explore both recursive and iterative solutions."
+            ];
+            
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            showNotification(`🤖 AI: ${randomResponse}`, 'info');
+            document.getElementById('aiQuestion').value = '';
+        }
+
+        // Analyzer Functions
+        function analyzeFullCode() {
+            const code = document.getElementById('analyzerCodeEditor').value;
+            if (!code.trim()) {
+                showNotification('Please enter some code to analyze', 'warning');
+                return;
+            }
+            
+            // Update analysis results
+            const results = document.getElementById('analysisResults');
+            results.innerHTML = `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-medium text-gray-800 mb-2">Code Metrics</h5>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span>Lines of Code:</span>
+                            <span class="font-medium">${code.split('\n').length}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Complexity:</span>
+                            <span class="font-medium text-orange-600">High</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Functions:</span>
+                            <span class="font-medium">${(code.match(/def /g) || []).length}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-medium text-gray-800 mb-2">Quality Score</h5>
+                    <div class="flex items-center space-x-2">
+                        <div class="flex-1 bg-gray-200 rounded-full h-3">
+                            <div class="bg-yellow-500 h-3 rounded-full" style="width: 60%"></div>
+                        </div>
+                        <span class="text-sm font-medium">60/100</span>
+                    </div>
+                </div>
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h5 class="font-medium text-gray-800 mb-2">Issues Found</h5>
+                    <div class="space-y-2">
+                        <div class="flex items-start space-x-2">
+                            <span class="text-red-500 text-xs mt-1">🚨</span>
+                            <p class="text-xs text-gray-600">O(n²) time complexity - inefficient for large datasets</p>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <span class="text-yellow-500 text-xs mt-1">⚠️</span>
+                            <p class="text-xs text-gray-600">Missing input validation</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showNotification('Comprehensive code analysis completed!', 'success');
+        }
+
+        function checkSyntax() {
+            showNotification('✅ No syntax errors found', 'success');
+        }
+
+        function findBugs() {
+            showNotification('🐛 Found 2 potential issues: missing edge case handling, inefficient algorithm', 'warning');
+        }
+
+        function optimizeCode() {
+            showNotification('⚡ Optimization suggestions: Use merge sort, add input validation, implement early returns', 'info');
+        }
+
+        // Exercise Functions
+        function loadExercises(difficulty) {
+            const exercises = {
+                beginner: 'Basic loops and conditionals',
+                intermediate: 'Data structures and algorithms',
+                advanced: 'Complex problem solving and optimization'
+            };
+            
+            showNotification(`Loading ${difficulty} exercises: ${exercises[difficulty]}`, 'info');
+        }
+
+        function generateCustomExercise() {
+            const exercise = document.getElementById('currentExercise');
+            exercise.innerHTML = `
+                <div class="bg-purple-50 border-l-4 border-purple-400 p-4">
+                    <h4 class="font-semibold text-purple-800 mb-2">AI Generated: Palindrome Checker</h4>
+                    <p class="text-purple-700 text-sm mb-3">
+                        Create a function that checks if a given string is a palindrome (reads the same forwards and backwards).
+                        Ignore spaces, punctuation, and case.
+                    </p>
+                    <div class="text-xs text-purple-600">
+                        <strong>Example:</strong> "A man a plan a canal Panama" → True
+                    </div>
+                </div>
+                <div class="code-editor">
+                    <div class="bg-gray-800 px-4 py-2 text-white text-sm flex items-center justify-between">
+                        <span>solution.py</span>
+                        <div class="flex space-x-2">
+                            <button onclick="testSolution()" class="bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700 transition-colors">
+                                🧪 Test
+                            </button>
+                            <button onclick="submitSolution()" class="bg-green-600 px-3 py-1 rounded text-xs hover:bg-green-700 transition-colors">
+                                ✅ Submit
+                            </button>
+                        </div>
+                    </div>
+                    <textarea class="w-full h-48 code-font text-sm bg-gray-900 text-green-400 p-4 resize-none focus:outline-none" placeholder="def is_palindrome(s):
+    # Your solution here
+    pass
+
+# Test cases will be run automatically"></textarea>
+                </div>
+                <div class="bg-gray-900 text-green-400 p-4 rounded-lg code-font text-sm min-h-16">
+                    <div class="text-gray-500">Test results will appear here...</div>
+                </div>
+            `;
+            
+            showNotification('✨ Custom exercise generated based on your skill level!', 'success');
+        }
+
+        function testSolution() {
+            const results = document.getElementById('exerciseResults');
+            results.innerHTML = `
+                <div class="text-green-400">Test Case 1: ✅ Passed</div>
+                <div class="text-green-400">Test Case 2: ✅ Passed</div>
+                <div class="text-red-400">Test Case 3: ❌ Failed - Expected [0,1], got None</div>
+                <div class="text-yellow-400">Test Case 4: ⏳ Running...</div>
+                <div class="text-gray-500 mt-2">3/4 tests passed</div>
+            `;
+        }
+
+        function submitSolution() {
+            showNotification('🎉 Solution submitted! Score: 85/100. Great job!', 'success');
+        }
+
+        // Utility Functions
+        function showNotification(message, type = 'info') {
+            const colors = {
+                success: 'bg-green-600',
+                error: 'bg-red-600',
+                warning: 'bg-yellow-600',
+                info: 'bg-blue-600'
+            };
+            
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 pulse-animation`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 4000);
+        }
+
+        // Initialize the platform
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default tab
+            switchTab('tutorial');
+            
+            // Initialize syntax highlighting
+            if (typeof Prism !== 'undefined') {
+                Prism.highlightAll();
+            }
+            
+            // Simulate real-time code analysis
+            const editors = ['tutorialCodeEditor', 'practiceCodeEditor', 'analyzerCodeEditor'];
+            editors.forEach(editorId => {
+                const editor = document.getElementById(editorId);
+                if (editor) {
+                    editor.addEventListener('input', function() {
+                        // Simulate real-time analysis feedback
+                        console.log('Analyzing code in real-time...');
+                    });
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97e592a4b43ba7e4',t:'MTc1Nzc0NDc4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
